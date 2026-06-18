@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Binary Search Visualizer</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f4f7f6; }
+        .back { display: inline-block; margin: 20px; color: #2ecc71; text-decoration: none; }
+        .box-container { display: flex; justify-content: center; gap: 10px; margin: 30px; }
+        .box { width: 50px; height: 50px; background: #2ecc71; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; border-radius: 5px; transition: 0.3s; }
+        input, button { padding: 10px; font-size: 16px; margin: 5px; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #2ecc71; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <a class="back" href="index.html">← Kembali ke Menu</a>
+    <h2>Binary Search Visualizer (Array Terurut)</h2>
+    <input type="number" id="target" placeholder="Cari angka...">
+    <button onclick="binarySearch()">Cari</button>
+    <div class="box-container" id="container"></div>
+    <p id="status"></p>
+
+    <script>
+        const container = document.getElementById('container');
+        // Binary search membutuhkan data yang sudah terurut
+        const array = [10, 23, 34, 45, 56, 71, 82, 95];
+        
+        function render() {
+            container.innerHTML = '';
+            array.forEach(val => {
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.innerText = val;
+                container.appendChild(box);
+            });
+        }
+
+        const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+        async function binarySearch() {
+            render();
+            const target = parseInt(document.getElementById('target').value);
+            const boxes = document.getElementsByClassName('box');
+            const status = document.getElementById('status');
+            
+            if (isNaN(target)) return alert("Masukkan angka target!");
+
+            let low = 0;
+            let high = array.length - 1;
+
+            while (low <= high) {
+                // Reset warna area luar jangkauan pencarian
+                for(let i=0; i<array.length; i++) {
+                    if(i < low || i > high) boxes[i].style.backgroundColor = '#7f8c8d';
+                }
+
+                let mid = Math.floor((low + high) / 2);
+                boxes[mid].style.backgroundColor = '#e74c3c'; // Merah untuk Mid
+                status.innerText = `Memeriksa nilai tengah (Index: ${mid}, Nilai: ${array[mid]})`;
+                await sleep(1000);
+
+                if (array[mid] === target) {
+                    boxes[mid].style.backgroundColor = '#f1c40f';
+                    status.innerText = `Target ${target} Ditemukan di indeks ke-${mid}!`;
+                    return;
+                } else if (array[mid] < target) {
+                    low = mid + 1;
+                    status.innerText = `${target} lebih besar dari ${array[mid]}. Geser batas kiri (Low).`;
+                } else {
+                    high = mid - 1;
+                    status.innerText = `${target} lebih kecil dari ${array[mid]}. Geser batas kanan (High).`;
+                }
+                await sleep(1000);
+            }
+            status.innerText = `Target ${target} tidak ditemukan.`;
+            for(let i=0; i<array.length; i++) boxes[i].style.backgroundColor = '#7f8c8d';
+        }
+        render();
+    </script>
+</body>
+</html>
