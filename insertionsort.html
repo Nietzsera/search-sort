@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Insertion Sort Visualizer</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f4f7f6; }
+        .back { display: inline-block; margin: 20px; color: #3498db; text-decoration: none; }
+        .bars-container { display: flex; justify-content: center; align-items: flex-end; height: 200px; gap: 5px; margin: 30px auto; width: 80%; background: white; padding: 20px; border-radius: 8px; }
+        .bar { width: 30px; background-color: #3498db; transition: 0.2s ease; color: white; font-size: 12px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 5px; }
+        button { padding: 10px 20px; font-size: 16px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <a class="back" href="index.html">← Kembali ke Menu</a>
+    <h2>Insertion Sort Visualizer</h2>
+    <div class="bars-container" id="container"></div>
+    <button onclick="insertionSort()">Mulai Sort</button>
+
+    <script>
+        const container = document.getElementById('container');
+        let array = [65, 15, 40, 85, 25, 10, 50];
+
+        function render() {
+            container.innerHTML = '';
+            array.forEach(val => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${val * 2}px`;
+                bar.innerText = val;
+                container.appendChild(bar);
+            });
+        }
+
+        const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+        async function insertionSort() {
+            let bars = document.getElementsByClassName('bar');
+            for (let i = 1; i < array.length; i++) {
+                let key = array[i];
+                let j = i - 1;
+                
+                bars[i].style.backgroundColor = '#e74c3c';
+                await sleep(400);
+
+                while (j >= 0 && array[j] > key) {
+                    bars[j].style.backgroundColor = '#f1c40f';
+                    array[j + 1] = array[j];
+                    j = j - 1;
+                    render();
+                    bars = document.getElementsByClassName('bar');
+                    await sleep(300);
+                }
+                array[j + 1] = key;
+                render();
+                bars = document.getElementsByClassName('bar');
+                for(let k=0; k<=i; k++) bars[k].style.backgroundColor = '#2ecc71';
+                await sleep(200);
+            }
+        }
+        render();
+    </script>
+</body>
+</html>

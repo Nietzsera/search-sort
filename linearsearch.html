@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Linear Search Visualizer</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; background: #f4f7f6; }
+        .back { display: inline-block; margin: 20px; color: #2ecc71; text-decoration: none; }
+        .box-container { display: flex; justify-content: center; gap: 10px; margin: 30px; }
+        .box { width: 50px; height: 50px; background: #2ecc71; color: white; display: flex; justify-content: center; align-items: center; font-weight: bold; border-radius: 5px; transition: 0.3s; }
+        input, button { padding: 10px; font-size: 16px; margin: 5px; border-radius: 5px; border: 1px solid #ccc; }
+        button { background: #2ecc71; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <a class="back" href="index.html">← Kembali ke Menu</a>
+    <h2>Linear Search Visualizer</h2>
+    <input type="number" id="target" placeholder="Cari angka...">
+    <button onclick="linearSearch()">Cari</button>
+    <div class="box-container" id="container"></div>
+    <p id="status"></p>
+
+    <script>
+        const container = document.getElementById('container');
+        const array = [12, 45, 23, 89, 56, 34, 71, 90];
+        
+        function render() {
+            container.innerHTML = '';
+            array.forEach(val => {
+                const box = document.createElement('div');
+                box.className = 'box';
+                box.innerText = val;
+                container.appendChild(box);
+            });
+        }
+
+        const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+        async function linearSearch() {
+            render();
+            const target = parseInt(document.getElementById('target').value);
+            const boxes = document.getElementsByClassName('box');
+            const status = document.getElementById('status');
+            
+            if (isNaN(target)) return alert("Masukkan angka target!");
+
+            for (let i = 0; i < array.length; i++) {
+                boxes[i].style.backgroundColor = '#e74c3c';
+                status.innerText = `Memeriksa indeks ke-${i}...`;
+                await sleep(600);
+
+                if (array[i] === target) {
+                    boxes[i].style.backgroundColor = '#f1c40f'; // Warna kuning jika ketemu
+                    status.innerText = `Target ${target} Ditemukan di indeks ke-${i}!`;
+                    return;
+                }
+                boxes[i].style.backgroundColor = '#7f8c8d'; // Warna abu jika salah
+            }
+            status.innerText = `Target ${target} tidak ditemukan dalam array.`;
+        }
+        render();
+    </script>
+</body>
+</html>
